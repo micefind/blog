@@ -1,0 +1,8 @@
+.el-card__body {
+    height: 100% !important;
+    padding: 0 !important;
+}
+
+.el-dialog__header, .el-dialog__footer {
+    padding: 0 !important;
+}

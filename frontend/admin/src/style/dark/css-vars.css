@@ -1,0 +1,12 @@
+/* 自定义全局使用的暗黑模式颜色 */
+html.dark .el-card, 
+html.dark .el-dialog {
+    background-color: #1d1e1f;
+}
+
+
+html.dark .scroll-box {
+    background-color: #121212;
+}
+
+

@@ -1,19 +1,21 @@
-import styles from "./content.module.scss";
-import logo from "../../../assets/images/logo.png";
-import { List, Tag } from "antd";
-import { FolderViewOutlined } from "@ant-design/icons";
+import styles from "./content.module.scss"
+import logo from "../../../../public/logo.svg"
+import { List, Tag } from "antd"
+import { FolderViewOutlined } from "@ant-design/icons"
 export default function Content() {
-  const list = [];
+  const list = []
   for (let i = 0; i < 20; i++) {
-    list.push({ title: i });
+    list.push({ title: i })
   }
   return (
     <div className={styles.content}>
       {/* 头部 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <img src={logo} alt="" />
-          <h1>标题</h1>
+          <a href="/">
+            <img src={logo} alt="鼠觅奇物" />
+            <h1>鼠觅奇物</h1>
+          </a>
         </div>
       </div>
       {/* 内容 */}
@@ -57,5 +59,5 @@ export default function Content() {
         </div>
       </div>
     </div>
-  );
+  )
 }

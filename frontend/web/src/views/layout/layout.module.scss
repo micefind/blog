@@ -8,10 +8,10 @@
 
   .content {
     width: calc(100% - 400px);
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .info {
     width: 400px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
   }
 }

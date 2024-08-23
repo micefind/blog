@@ -1,4 +1,104 @@
 .info {
   background-color: #fff;
   height: 100%;
+
+  .profile {
+    padding: 20px 20px 0;
+    .avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        border: 3px solid #eeeeee;
+      }
+    }
+
+    .name {
+      text-align: center;
+      padding: 10px 0;
+
+      h2 {
+        font-size: 23px;
+        font-weight: 600;
+        color: #40485b;
+      }
+    }
+    .icon {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      .gitee {
+        padding: 0 10px;
+      }
+      img {
+        max-width: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .list {
+    padding: 0 20px;
+    height: calc(100vh - 218px);
+    overflow-y: auto;
+
+    .content {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 20px 0;
+      ul {
+        li {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          user-select: none;
+          &:hover {
+            background-color: #f7f8fa;
+            border-radius: 5px;
+          }
+          .img {
+            border: 1px solid #e0e2ec;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 5px;
+
+            img {
+              height: 100%;
+            }
+          }
+
+          .text {
+            padding: 0 20px;
+            h3 {
+              color: #252933;
+              font-weight: 600;
+              font-size: 16px;
+            }
+            span {
+              color: #191b1f;
+              line-height: 2em;
+            }
+          }
+        }
+      }
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid hsla(0, 0%, 100%, 0.2);
+      }
+    }
+
+    .footer {
+      padding: 20px 0;
+      span {
+        font-size: 13px;
+        line-height: 2em;
+        color: #909399;
+      }
+    }
+  }
 }
