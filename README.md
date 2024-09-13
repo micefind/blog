@@ -11,7 +11,7 @@
 前端
 	前台网页：react + antDesign
 	后台管理系统：vue3 + elementplus
-	小程序：uniapp + uview
+	小程序：uniapp + uviewplus
 后端：go + gin
 数据库：mysql
 ```
