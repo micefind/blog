@@ -11,7 +11,7 @@ request.interceptors.request.use(
   (config) => {
     if (config.url !== "user/login") {
       // 判断请求是否是登录接口
-      config.headers.Authorization = sessionStorage.getItem("token") // 如果不是登录接口，就给请求头里面设置token
+      config.headers.Authorization = localStorage.getItem("token") // 如果不是登录接口，就给请求头里面设置token
     }
     return config // 返回这个配置对象，如果没有返回，这个请求就不会发送出去
   },

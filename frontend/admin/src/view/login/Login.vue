@@ -41,12 +41,13 @@ const login = (formEl: FormInstance | undefined) => {
     const { data: res } = await request.post("user/login", userInfo.value)
     if (res.status !== 200) return
     ElMessage.success(`登录成功`)
-    sessionStorage.setItem("token", res.data.token)
+    localStorage.setItem("token", res.data.token)
 
     router.push({
-      path: "/overview",
+      path: "/article",
     })
-    tagsViewStore.setActivePath({ path: "/overview", name: "首页" })
+    
+    tagsViewStore.setActivePath({ path: "/article", name: "文章管理" })
   })
 }
 </script>
@@ -58,7 +59,7 @@ const login = (formEl: FormInstance | undefined) => {
       <div class="logo-box">
         <el-image :src="logo" fit="cover" />
       </div>
-      <div class="title">登录 - 鼠觅奇物 - 博客后台</div>
+      <div class="title">登录 - 鼠觅奇物</div>
       <!--登录表单区域-->
       <el-form
         ref="loginFormRef"

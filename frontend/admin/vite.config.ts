@@ -27,7 +27,7 @@ export default defineConfig({
   // 项目启动后自动打开浏览器
   server: {
     host: "127.0.0.1", // 指定服务器应该监听哪个 IP 地址
-    port: 9500, // 指定开发服务器端口
+    port: 9999, // 指定开发服务器端口
     strictPort: false, // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口
     open: true, // 开发服务器启动时，自动在浏览器中打开应用程序
   },
