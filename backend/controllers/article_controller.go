@@ -89,7 +89,7 @@ func GetArticleList(c *gin.Context) {
 	}
 
 	// 查询列表数据
-	query := "SELECT * FROM article WHERE 1=1"
+	query := "SELECT article.id,article.title,article.intro,article.keywords,article.views,article.creator_id,article.create_time,article.status,user.username FROM article JOIN user ON article.creator_id = user.id WHERE 1=1"
 	args := []interface{}{}
 	if requestData.Keyword != "" {
 		query += " AND (title LIKE ? OR intro LIKE ? OR keywords LIKE ?)"
@@ -101,6 +101,7 @@ func GetArticleList(c *gin.Context) {
 		query += " AND status = ?"
 		args = append(args, requestData.Status)
 	}
+	query += " ORDER BY id DESC" // 添加按照 id 降序排列
 	if requestData.PageNum != nil && requestData.PageSize != nil {
 		offset := (*requestData.PageNum - 1) * *requestData.PageSize
 		query += " LIMIT ? OFFSET ?"
@@ -113,10 +114,22 @@ func GetArticleList(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var articleList []models.Article = []models.Article{}
+	type articleItem struct {
+		ID         int    `json:"id"`
+		Title      string `json:"title" validate:"required,min=1,max=20"`
+		Intro      string `json:"intro"`
+		Keywords   string `json:"keywords"`
+		Views      int    `json:"views"`
+		CreatorID  int    `json:"creator_id"`
+		CreateTime string `json:"create_time"`
+		Status     string `json:"status" validate:"required,oneof=0 1 2"`
+		Creator    string `json:"creator"`
+	}
+
+	var articleList []articleItem = []articleItem{}
 	for rows.Next() {
-		var article models.Article
-		if err := rows.Scan(&article.ID, &article.Title, &article.Intro, &article.Keywords, &article.Content, &article.CreatorID, &article.CreateTime, &article.Status); err != nil {
+		var article articleItem
+		if err := rows.Scan(&article.ID, &article.Title, &article.Intro, &article.Keywords, &article.Views, &article.CreatorID, &article.CreateTime, &article.Status, &article.Creator); err != nil {
 			utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据解析失败: %v", err), nil)
 			return
 		}

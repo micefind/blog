@@ -87,6 +87,7 @@ func GetProjectList(c *gin.Context) {
 		query += " AND project_name LIKE ?"
 		args = append(args, "%"+requestData.ProjectName+"%")
 	}
+	query += " ORDER BY id DESC" // 添加按照 id 降序排列
 	if requestData.PageNum != nil && requestData.PageSize != nil {
 		offset := (*requestData.PageNum - 1) * *requestData.PageSize
 		query += " LIMIT ? OFFSET ?"

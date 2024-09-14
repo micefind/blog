@@ -294,7 +294,7 @@ func GetUserList(c *gin.Context) {
 	}
 
 	// 构建查询条件
-	query := "SELECT id, username, phone_number, email, real_name, register_time, avatar, status, role FROM user WHERE 1=1"
+	query := "SELECT id, username, phone_number, email, real_name, register_time, avatar, status, role FROM user  WHERE 1=1"
 	args := []interface{}{}
 
 	if requestData.Username != "" {
@@ -306,6 +306,8 @@ func GetUserList(c *gin.Context) {
 		query += " AND status = ?"
 		args = append(args, requestData.Status)
 	}
+
+	query += " ORDER BY id DESC" // 添加按照 id 降序排列
 
 	if requestData.PageNum != nil && requestData.PageSize != nil {
 		// 计算偏移量

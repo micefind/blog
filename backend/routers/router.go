@@ -14,9 +14,17 @@ func SetupRouter() *gin.Engine {
 	// 使用 CORS 中间件，允许跨域请求
 	router.Use(middlewares.CORSMiddleware())
 
+	// 配置静态文件路径，将 /static 映射到本地的 ./static 文件夹
+	router.Static("/static", "./static")
+
 	// 创建 /api 路由组，所有以 /api 开头的路由将由此组管理
 	api := router.Group("/api")
 	{
+		// 文件上传路由组
+		upload := api.Group("/upload")
+		{
+			upload.POST("/image", middlewares.JWTAuthMiddleware(), controllers.UploadImage)
+		}
 		// 创建 /api/user 路由组，所有用户相关的路由将由此组管理
 		user := api.Group("/user")
 		{
