@@ -18,7 +18,7 @@ func handleValidationErrorsForArticle(c *gin.Context, err error) {
 		field := err.Field()
 		switch field {
 		case "Title":
-			utils.JSONResponse(c, http.StatusBadRequest, "文章名称不能为空，且长度在 1-20 位之间", nil)
+			utils.JSONResponse(c, http.StatusBadRequest, "文章名称不能为空，且长度在 1-50 位之间", nil)
 		case "Status":
 			utils.JSONResponse(c, http.StatusBadRequest, "文章状态设置错误", nil)
 		}
@@ -46,8 +46,8 @@ func AddArticle(c *gin.Context) {
 		requestData.CreatorID = userID.(int)
 	}
 	//	数据库插入数据
-	sql := "INSERT INTO article (title, intro,keywords,content,creator_id,create_time,status,views) VALUES (?,?,?,?,?,?,?,?)"
-	_, err := config.DB.Exec(sql, requestData.Title, requestData.Intro, requestData.Keywords, requestData.Content, requestData.CreatorID, requestData.CreateTime, requestData.Status, views)
+	sql := "INSERT INTO article (title,cover_image, intro,keywords,content,creator_id,create_time,status,views) VALUES (?,?,?,?,?,?,?,?,?)"
+	_, err := config.DB.Exec(sql, requestData.Title, requestData.CoverImage, requestData.Intro, requestData.Keywords, requestData.Content, requestData.CreatorID, requestData.CreateTime, requestData.Status, views)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据库插入失败: %v", err), nil)
 		return
@@ -66,8 +66,8 @@ func EditArticle(c *gin.Context) {
 		handleValidationErrorsForArticle(c, err)
 		return
 	}
-	sql := "UPDATE article SET title=?,intro=?,keywords=?,content=?,status=? WHERE id=?"
-	_, err := config.DB.Exec(sql, requestData.Title, requestData.Intro, requestData.Keywords, requestData.Content, requestData.Status, requestData.ID)
+	sql := "UPDATE article SET title=?,cover_image=?,intro=?,keywords=?,content=?,status=? WHERE id=?"
+	_, err := config.DB.Exec(sql, requestData.Title, requestData.CoverImage, requestData.Intro, requestData.Keywords, requestData.Content, requestData.Status, requestData.ID)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据库更新失败: %v", err), nil)
 		return
@@ -89,7 +89,7 @@ func GetArticleList(c *gin.Context) {
 	}
 
 	// 查询列表数据
-	query := "SELECT article.id,article.title,article.intro,article.keywords,article.views,article.creator_id,article.create_time,article.status,user.username FROM article JOIN user ON article.creator_id = user.id WHERE 1=1"
+	query := "SELECT article.id,article.title,article.intro,article.cover_image,article.keywords,article.views,article.creator_id,article.create_time,article.status,user.username FROM article JOIN user ON article.creator_id = user.id WHERE 1=1"
 	args := []interface{}{}
 	if requestData.Keyword != "" {
 		query += " AND (title LIKE ? OR intro LIKE ? OR keywords LIKE ?)"
@@ -98,7 +98,7 @@ func GetArticleList(c *gin.Context) {
 		args = append(args, "%"+requestData.Keyword+"%")
 	}
 	if requestData.Status != "" {
-		query += " AND status = ?"
+		query += " AND article.status = ?"
 		args = append(args, requestData.Status)
 	}
 	query += " ORDER BY id DESC" // 添加按照 id 降序排列
@@ -118,6 +118,7 @@ func GetArticleList(c *gin.Context) {
 		ID         int    `json:"id"`
 		Title      string `json:"title" validate:"required,min=1,max=20"`
 		Intro      string `json:"intro"`
+		CoverImage string `json:"cover_image"`
 		Keywords   string `json:"keywords"`
 		Views      int    `json:"views"`
 		CreatorID  int    `json:"creator_id"`
@@ -129,7 +130,7 @@ func GetArticleList(c *gin.Context) {
 	var articleList []articleItem = []articleItem{}
 	for rows.Next() {
 		var article articleItem
-		if err := rows.Scan(&article.ID, &article.Title, &article.Intro, &article.Keywords, &article.Views, &article.CreatorID, &article.CreateTime, &article.Status, &article.Creator); err != nil {
+		if err := rows.Scan(&article.ID, &article.Title, &article.Intro, &article.CoverImage, &article.Keywords, &article.Views, &article.CreatorID, &article.CreateTime, &article.Status, &article.Creator); err != nil {
 			utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据解析失败: %v", err), nil)
 			return
 		}
@@ -147,7 +148,7 @@ func GetArticleList(c *gin.Context) {
 		args2 = append(args2, "%"+requestData.Keyword+"%")
 	}
 	if requestData.Status != "" {
-		countQuery += " AND status = ?"
+		countQuery += " AND article.status = ?"
 		args2 = append(args2, requestData.Status)
 	}
 	err = config.DB.QueryRow(countQuery, args2...).Scan(&total)
@@ -197,7 +198,7 @@ func GetArticleDetails(c *gin.Context) {
 	}
 	// 查询文章信息
 	sql := "SELECT * FROM article WHERE id=?"
-	err = tx.QueryRow(sql, requestData.ID).Scan(&article.ID, &article.Title, &article.Intro, &article.Keywords, &article.Content, &article.Views, &article.CreatorID, &article.CreateTime, &article.Status)
+	err = tx.QueryRow(sql, requestData.ID).Scan(&article.ID, &article.Title, &article.CoverImage, &article.Intro, &article.Keywords, &article.Content, &article.Views, &article.CreatorID, &article.CreateTime, &article.Status)
 	if err != nil {
 		// 回滚事务
 		tx.Rollback()

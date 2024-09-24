@@ -2,7 +2,8 @@ package models
 
 type Article struct {
 	ID         int    `json:"id"`
-	Title      string `json:"title" validate:"required,min=1,max=20"`
+	Title      string `json:"title" validate:"required,min=1,max=50"`
+	CoverImage string `json:"cover_image"`
 	Intro      string `json:"intro"`
 	Keywords   string `json:"keywords"`
 	Content    string `json:"content"`

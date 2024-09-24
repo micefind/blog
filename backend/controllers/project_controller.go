@@ -19,7 +19,7 @@ func handleValidationErrorsForProject(c *gin.Context, err error) {
 		case "ProjectName":
 			utils.JSONResponse(c, http.StatusBadRequest, "项目名称不能为空，且长度在 1-20 位之间", nil)
 		case "Description":
-			utils.JSONResponse(c, http.StatusBadRequest, "项目描述在50字以下", nil)
+			utils.JSONResponse(c, http.StatusBadRequest, "项目描述在100字以下", nil)
 		}
 		break
 	}

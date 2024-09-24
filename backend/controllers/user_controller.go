@@ -134,8 +134,9 @@ func Login(c *gin.Context) {
 	var (
 		hashedPassword string
 		userID         int
+		avatar         string
 	)
-	err := config.DB.QueryRow("SELECT id, password FROM user WHERE username = ?", user.Username).Scan(&userID, &hashedPassword)
+	err := config.DB.QueryRow("SELECT id, password, avatar FROM user WHERE username = ?", user.Username).Scan(&userID, &hashedPassword, &avatar)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusUnauthorized, "用户名或密码无效", nil)
 		return
@@ -154,7 +155,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	utils.JSONResponse(c, http.StatusOK, "登录成功", gin.H{"token": token})
+	utils.JSONResponse(c, http.StatusOK, "登录成功", gin.H{
+		"token":  token,
+		"avatar": avatar,
+	})
 }
 
 // AddUser 添加新用户（需要 JWT 身份验证）

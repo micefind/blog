@@ -9,7 +9,7 @@ interface TagView {
 export const useTagsViewStore = defineStore("tags", {
   state: () => ({
     visitedViews: [] as TagView[], // 明确声明 visitedViews 的类型
-    activePath: '/overview'
+    activePath: ''
   }),
   actions: {
     // 设置 activePath

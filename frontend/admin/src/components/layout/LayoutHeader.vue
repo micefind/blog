@@ -22,6 +22,7 @@ const tagsViewStore = useTagsViewStore()
 const drawer = ref(false)
 const fullscreen = ref(false)
 const dropdown = ref<DropdownInstance>()
+const avatarUrl = localStorage.getItem("avatar") || avatar
 
 const showClick = () => {
   if (!dropdown.value) return
@@ -40,6 +41,9 @@ const avatarHandleCommand = (command: string) => {
       break
     case "logout":
       router.push({ path: "/login" })
+      localStorage.clear()
+      sessionStorage.clear()
+      tagsViewStore.setVisitedView()
       break
   }
 }
@@ -127,7 +131,7 @@ onMounted(() => {
         trigger="contextmenu"
         @command="avatarHandleCommand"
       >
-        <el-avatar :size="40" fit="cover" :src="avatar" />
+        <el-avatar :size="40" fit="cover" :src="avatarUrl" />
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="profile">

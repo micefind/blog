@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { User,Iphone,EditPen,Help,CollectionTag,Sunrise } from '@element-plus/icons-vue'
+import { User,Iphone,EditPen,Help,CollectionTag,Sunrise,Close, FullScreen } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import request from '../../utils/request'
 import defaultAvatar from '../../assets/image/defaultAvatar.png'
+import comCutimgcropper from '../../components/cropper/Cropper.vue'
 import type { FormInstance } from 'element-plus'
 import { useRouter } from 'vue-router'
 
+const avatar = ref<any>(null)
 const router = useRouter()
+const dialogVisible = ref<any>(false)
+const fullscreen = ref<any>(false)
 const activeName = ref('first')
 const userInfo = ref<any>({})
 const userInfoArr = ref<any>([])
@@ -79,6 +83,42 @@ const passwordFormRules = ref<any>({
     ]
 })
 
+const clickEven = (val: any) => {
+    avatar.value = val
+}
+
+// 上传图片
+const uploadImg = async (file: File): Promise<string | null> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data: res } = await request.post("/upload/image", formData);
+  return res.status === 200 ? res.data.url : null;
+};
+
+const setAvatar = async () => {
+    if (!avatar.value) return ElMessage.warning('请选择更换的图片')
+    // 将base64图片转化为blob
+    var arr = avatar.value.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    const blob = new Blob([u8arr], { type: mime })
+    // 将blob转化为file
+    const file = new File([blob], 'cropper.jpeg', { type: blob.type })
+    console.log(file);
+    
+    // 上传文件到服务器
+    userInfo.value.avatar = await uploadImg(file)
+    // 保存信息
+    await submitUserInfo(userFormRef.value)
+    localStorage.setItem('avatar', userInfo.value.avatar)
+    dialogVisible.value = false
+}
+
 const submitUserInfo = (formEl: any) => {
     formEl.validate(async (valid: any) => {
         if (!valid) return
@@ -104,6 +144,7 @@ const changePassword = (formEl: any) => {
         router.push({
             path: '/login'
         })
+        localStorage.clear()
         sessionStorage.clear()
     })
 }
@@ -155,8 +196,13 @@ getUserInfo()
             </template>
             <div class="card-body">
                 <ul>
-                    <li>
-                        <el-avatar :size="100" :src="defaultAvatar" />
+                    <li @click="dialogVisible=true" class="avatar-box">
+                        <div class="img-box">
+                            <el-avatar :size="100" :src="userInfo.avatar||defaultAvatar" fit="cover" />
+                            <div class="mask">
+                                <span class="show-text">更换头像</span>
+                            </div>
+                        </div>
                     </li>
                     <li v-for="item in userInfoArr">
                         <span>
@@ -237,6 +283,36 @@ getUserInfo()
             </div>
         </el-card>
     </div>
+    <el-dialog :fullscreen="fullscreen" v-model="dialogVisible" width="50vw" :draggable="true" :show-close="false"
+        style="padding: 0;">
+        <template #header="{ close, titleId, titleClass }" style="padding: 0;">
+            <div style="height: 54px;display: flex;align-items: center;padding: 0 15px;justify-content: space-between;">
+                <h4 :id="titleId" :class="titleClass" style="font-weight: 500;font-size: 16px;">
+                    更换头像
+                </h4>
+                <div>
+                    <el-icon style="cursor: pointer;margin: 0 10px;" @click="fullscreen = !fullscreen">
+                        <FullScreen />
+                    </el-icon>
+                    <el-icon @click="close" style="cursor: pointer;">
+                        <Close />
+                    </el-icon>
+                </div>
+            </div>
+        </template>
+        <div
+            style="border-top: 1px solid var(--el-border-color);border-bottom: 1px solid var(--el-border-color);padding: 20px">
+            <comCutimgcropper @clickChild="clickEven"></comCutimgcropper>
+        </div>
+        <template #footer>
+            <div style="padding: 10px 20px 20px;">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="setAvatar">
+                    确定
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -288,6 +364,54 @@ getUserInfo()
         justify-content: center;
         padding-top: 0;
     }
+}
+
+.avatar-box {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .img-box {
+        position: relative;
+        width: 100px;
+        height: 100px;
+
+        .el-avatar {
+            border: 3px solid var(--el-border-color);
+        }
+
+        .mask {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .4);
+            border-radius: 50%;
+        }
+
+
+        .show-text {
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+
+        }
+
+        &:hover {
+            .mask {
+                display: block;
+            }
+        }
+    }
+
+
+
 }
 
 .base-file {

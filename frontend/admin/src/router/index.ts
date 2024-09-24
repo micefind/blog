@@ -47,6 +47,12 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/article/editor",
+    meta: { title: "文章编辑" },
+    name: "editor",
+    component: () => import("@/view/article/Editor.vue"),
+  },
 ]
 
 const router = createRouter({

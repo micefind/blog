@@ -1,20 +1,23 @@
-## 简介
+## 鼠觅奇物博客后台
 
-后台UI模板 ELEMENT-UI
+## 开发环境
+```
+node v20.11.1
+npm v10.5.0
+vite v5.2.0
+```
 
-演示地址：https://micefind.com/element
+## 运行项目
+```
+npm install
+npm run dev
+npm run build
+```
 
-## 技术栈
-
-Vue3、TypeScript、Vite、ElementPlus
-
-ElementPlus地址：https://element-plus.org/zh-CN/component/overview.html
-
-## 基础功能
-
- - 明暗主题切换
- - 路由标签栏
- - 自定义系统主题色
-
-## 界面概览
-![个人信息](https://foruda.gitee.com/images/1713320300729487380/8b467b74_10881983.png)
+## 预览地址
+[https://micefind.com/admin](https://micefind.com/admin)
+```
+预览账号
+username: mice
+password: 123456
+```

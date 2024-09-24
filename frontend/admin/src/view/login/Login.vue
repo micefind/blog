@@ -18,8 +18,8 @@ interface UserInfo {
 }
 
 const userInfo = ref<UserInfo>({
-  username: "micefind",
-  password: "Ms19991115.",
+  username: "",
+  password: "",
 })
 
 const loginFormRef = ref<FormInstance>()
@@ -42,11 +42,12 @@ const login = (formEl: FormInstance | undefined) => {
     if (res.status !== 200) return
     ElMessage.success(`登录成功`)
     localStorage.setItem("token", res.data.token)
+    localStorage.setItem("avatar", res.data.avatar)
 
     router.push({
       path: "/article",
     })
-    
+    tagsViewStore.addVisitedView({ path: "/article", name: "文章管理" })
     tagsViewStore.setActivePath({ path: "/article", name: "文章管理" })
   })
 }
@@ -71,6 +72,7 @@ const login = (formEl: FormInstance | undefined) => {
         <!--用户名-->
         <el-form-item prop="username">
           <el-input
+          @keyup.enter="login(loginFormRef)"
             placeholder="请输入用户名"
             v-model="userInfo.username"
             :prefix-icon="Avatar"
@@ -80,6 +82,7 @@ const login = (formEl: FormInstance | undefined) => {
         <!--密码-->
         <el-form-item prop="password">
           <el-input
+          @keyup.enter="login(loginFormRef)"
             placeholder="请输入密码"
             v-model="userInfo.password"
             :show-password="true"
@@ -94,9 +97,7 @@ const login = (formEl: FormInstance | undefined) => {
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="tag">
-        <el-link> 忘记密码？ </el-link>
-      </div>
+      
       <el-divider> 其他作品 </el-divider>
       <div class="other-box">
         <el-link target="_blank" href="https://gitee.com/micefind/museum">
@@ -160,16 +161,6 @@ const login = (formEl: FormInstance | undefined) => {
     }
   }
 
-  .tag {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0 10px 0;
-
-    .el-link {
-      padding: 0 10px;
-    }
-  }
 
   .other-box {
     display: flex;

@@ -13,7 +13,7 @@ interface QueryInfo {
 }
 
 interface UserInfo {
-  id: number
+  id?: number
   username: string
   password?: string
   phone_number: string
@@ -43,7 +43,6 @@ const queryInfo = ref<QueryInfo>({
 })
 
 const userInfo = ref<UserInfo>({
-  id: -1,
   username: "",
   phone_number: "",
   email: "",
@@ -103,13 +102,13 @@ const submitData = async (formEl: FormInstance | null) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (!valid) return
-    const url = userInfo.value.id === -1 ? "/user/add" : "/user/edit"
+    const url = userInfo.value.id? "/user/edit" : "/user/add"
     const { data: res } = await request.post(url, userInfo.value)
     if (res.status === 200) {
-      ElMessage.success(userInfo.value.id === -1 ? "添加成功" : "更新成功")
+      dialogVisible.value = false
+      ElMessage.success(userInfo.value.id? "更新成功" : "添加成功")
       await getTableData()
       resetUserInfo()
-      dialogVisible.value = false
     }
   })
 }
@@ -126,7 +125,6 @@ const getDetails = async (id: number) => {
 // 重置用户信息
 const resetUserInfo = () => {
   userInfo.value = {
-    id: -1,
     username: "",
     phone_number: "",
     email: "",
@@ -139,7 +137,7 @@ const resetUserInfo = () => {
 
 // 显示新增弹窗
 const showAddDialog = () => {
-if (userInfo.value.id !== -1) {
+if (userInfo.value.id) {
   resetUserInfo()
 }
   dialogVisible.value = true
@@ -185,7 +183,7 @@ getTableData()
           clearable></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select placeholder="请选择状态" v-model="queryInfo.status">
+        <el-select placeholder="请选择状态" v-model="queryInfo.status" clearable>
           <el-option label="正常" value="0" />
           <el-option label="限制" value="1" />
           <el-option label="注销" value="2" />
@@ -302,7 +300,7 @@ getTableData()
           :id="titleId"
           :class="titleClass"
           style="font-weight: 500; font-size: 16px">
-          {{ userInfo.id === -1 ? "新增用户" : "编辑用户" }}
+          {{ userInfo.id? "编辑用户信息" : "添加用户" }}
         </h4>
         <div>
           <el-icon
