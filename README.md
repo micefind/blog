@@ -25,7 +25,8 @@ blog/
 │   ├── admin/               # 后台管理系统
 │   ├── miniapp/             # 小程序
 ├── backend/                 # 后端代码
-└── README.md                # 项目简介
+├── blog_db.sql              # 数据库SQL文件
+└── README.md                # 项目说明
 
 ```
 

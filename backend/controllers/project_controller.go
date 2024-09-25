@@ -39,8 +39,8 @@ func AddProject(c *gin.Context) {
 		return
 	}
 	//	数据库插入数据
-	sql := "INSERT INTO project (project_name, description,logo) VALUES (?, ?,?)"
-	_, err := config.DB.Exec(sql, requestData.ProjectName, requestData.Description, requestData.Logo)
+	sql := "INSERT INTO project (project_name, description,logo,url) VALUES (?, ?,?,?)"
+	_, err := config.DB.Exec(sql, requestData.ProjectName, requestData.Description, requestData.Logo, requestData.Url)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据库插入失败: %v", err), nil)
 		return
@@ -59,8 +59,8 @@ func EditProject(c *gin.Context) {
 		handleValidationErrorsForProject(c, err)
 		return
 	}
-	sql := "UPDATE project SET project_name=?,description=?,logo=? WHERE id=?"
-	_, err := config.DB.Exec(sql, requestData.ProjectName, requestData.Description, requestData.Logo, requestData.ID)
+	sql := "UPDATE project SET project_name=?,description=?,logo=?,url=? WHERE id=?"
+	_, err := config.DB.Exec(sql, requestData.ProjectName, requestData.Description, requestData.Logo, requestData.Url, requestData.ID)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据库更新失败: %v", err), nil)
 		return
@@ -103,7 +103,7 @@ func GetProjectList(c *gin.Context) {
 	var projectList []models.Project = []models.Project{}
 	for rows.Next() {
 		var project models.Project
-		if err := rows.Scan(&project.ID, &project.ProjectName, &project.Description, &project.Logo); err != nil {
+		if err := rows.Scan(&project.ID, &project.ProjectName, &project.Description, &project.Logo, &project.Url); err != nil {
 			utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据解析失败: %v", err), nil)
 			return
 		}
@@ -158,7 +158,7 @@ func GetProjectDetails(c *gin.Context) {
 		return
 	}
 	sql := "SELECT * FROM project WHERE id=?"
-	err := config.DB.QueryRow(sql, requestData.ID).Scan(&project.ID, &project.ProjectName, &project.Description, &project.Logo)
+	err := config.DB.QueryRow(sql, requestData.ID).Scan(&project.ID, &project.ProjectName, &project.Description, &project.Logo, &project.Url)
 	if err != nil {
 		utils.JSONResponse(c, http.StatusInternalServerError, fmt.Sprintf("数据库查询失败: %v", err), nil)
 		return

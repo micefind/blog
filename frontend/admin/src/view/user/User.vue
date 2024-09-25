@@ -91,9 +91,9 @@ const resetPassword = async (id: number) => {
       type: "warning",
     })
     const { data: res } = await request.post("/user/password/reset", { id })
-    if (res.status === 200) ElMessage.success("重置成功")
+    if (res.status !== 200) return
+    ElMessage.success("重置成功")
   } catch {
-    ElMessage.info("已取消")
   }
 }
 
@@ -329,7 +329,7 @@ getTableData()
           <el-input placeholder="请输入用户名" v-model="userInfo.username">
           </el-input>
         </el-form-item>
-        <el-form-item prop="password" label="密码" v-if="userInfo.id === -1">
+        <el-form-item prop="password" label="密码" v-if="!userInfo.id">
           <el-input placeholder="请输入密码" v-model="userInfo.password">
           </el-input>
         </el-form-item>

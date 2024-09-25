@@ -56,7 +56,6 @@ const deleteItem=async (id: number) => {
     await getTableData()
   }
   } catch {
-    ElMessage.info("已取消");
   }
 }
 

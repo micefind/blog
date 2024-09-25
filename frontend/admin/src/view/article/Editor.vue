@@ -37,7 +37,7 @@ const articleInfo = ref<ArticleInfo>({
 const rules = {
   title: [
     { required: true, message: "请输入标题", trigger: "blur" },
-    { min: 1, max: 20, message: "长度在 1 到 50 个字符", trigger: "blur" },
+    { min: 1, max: 50, message: "长度在 1 到 50 个字符", trigger: "blur" },
   ],
   intro: [
     { required: true, message: "请输入简介", trigger: "blur" },
@@ -79,7 +79,7 @@ const avatarHandleCommand = async (command: string) => {
     })
     router.go(-1)
   } catch {
-    ElMessage.info("已取消")
+    
   } 
       break
   }
@@ -115,7 +115,7 @@ const submitData = (formEl: FormInstance | null) => {
 </script>
 
 <template>
-  <div>
+  <div class="editor-container">
     <div class="header">
       <div class="input">
         <input placeholder="请输入文章标题" v-model="articleInfo.title"></input>
@@ -230,6 +230,9 @@ const submitData = (formEl: FormInstance | null) => {
 </template>
 
 <style scoped lang="scss">
+.editor-container {
+  overflow: hidden;
+}
 .header {
   height: 50px;
   display: flex;

@@ -18,6 +18,7 @@ interface ProjectInfo {
   project_name: string;
   description: string;
   logo: string;
+  url: string;
 }
 
 // 定义表格数据类型
@@ -55,6 +56,7 @@ const projectInfo = ref<ProjectInfo>({
   project_name: "",
   description: "",
   logo: "",
+  url: "",
 });
 
 // 表单验证规则
@@ -79,7 +81,6 @@ const deleteItem = async (id: number) => {
       await getTableData();
     }
   } catch {
-    ElMessage.info("已取消");
   }
 };
 
@@ -132,12 +133,14 @@ const resetUserInfo = () => {
     project_name: "",
     description: "",
     logo: "",
+    url: "",
   };
 };
 
 // 显示新增项目弹窗
 const showAddDialog = () => {
-  resetUserInfo();
+  if (projectInfo.value.id)
+    resetUserInfo();
   fileList.value = [];
   dialogVisible.value = true;
 };
@@ -219,6 +222,11 @@ getTableData();
             </template>
         </el-table-column>
       <el-table-column prop="project_name" label="项目名称" align="center" />
+      <el-table-column  label="地址" align="center" >
+        <template #default="scope">
+            <el-link :href="scope.row.url" target="_blank" :underline="false">{{scope.row.url}}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="描述" align="center" />
       <el-table-column label="操作" align="center" fixed="right" width="150">
         <template #default="scope">
@@ -299,6 +307,10 @@ getTableData();
         :rules="rules">
         <el-form-item prop="project_name" label="项目名称">
           <el-input placeholder="请输入项目" v-model="projectInfo.project_name">
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="url" label="地址">
+          <el-input placeholder="请输入地址" v-model="projectInfo.url">
           </el-input>
         </el-form-item>
         <el-form-item prop="description" label="描述">
