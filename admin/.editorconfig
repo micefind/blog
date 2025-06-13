@@ -1,0 +1,28 @@
+# 针对以下文件类型统一应用以下规则：
+# - JavaScript (.js, .mjs, .cjs)
+# - TypeScript (.ts, .mts, .cts)
+# - JSX / TSX
+# - Vue 单文件组件
+# - 各类样式表文件（CSS、SCSS、SASS、LESS、Stylus）
+[*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,vue,css,scss,sass,less,styl}]
+
+# 设置文件字符编码为 UTF-8，兼容大多数系统和工具
+charset = utf-8
+
+# 缩进大小设为 2 个字符，推荐用于前端项目
+indent_size = 2
+
+# 缩进风格使用空格而不是 Tab（推荐统一性和兼容性更好）
+indent_style = space
+
+# 文件末尾插入一个换行符（Git 和某些工具推荐这样做）
+insert_final_newline = true
+
+# 每行末尾的多余空格自动移除（避免无意义的 diff 和脏改动）
+trim_trailing_whitespace = true
+
+# 统一换行符为 LF（Unix 风格），跨平台更一致（避免 Windows CRLF 问题）
+end_of_line = lf
+
+# 建议每行最多 100 个字符，有利于可读性和多人协作（并非强制）
+max_line_length = 100
